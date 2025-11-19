@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мое 3D Портфолио</title>
+    
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #1a1a1a; /* Темный фон */
+            font-family: sans-serif;
+            color: white;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        h1 {
+            margin-bottom: 20px;
+            font-weight: 300;
+        }
+
+        /* Настройки самого вьювера */
+        model-viewer {
+            width: 80%;
+            height: 70vh; /* 70% от высоты экрана */
+            background-color: #1a1a1a;
+            border-radius: 10px;
+        }
+    </style>
+    
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
+</head>
+<body>
+
+    <h1>Мой 3D Проект</h1>
+
+    <model-viewer 
+        src="model.glb" 
+        alt="3D модель" 
+        auto-rotate 
+        camera-controls 
+        shadow-intensity="1"
+        ar>
+    </model-viewer>
+
+</body>
+</html>
