@@ -3,52 +3,99 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Мое 3D Портфолио</title>
-    
+    <title>Наложение 3D</title>
     <style>
         body {
             margin: 0;
-            padding: 0;
-            background-color: #000000; /* Темный фон */
-            font-family: sans-serif;
+            background-color: #121212;
             color: white;
+            font-family: sans-serif;
             height: 100vh;
             display: flex;
-            flex-direction: column;
-            align-items: center;
             justify-content: center;
-        }
-        
-        h1 {
-            margin-bottom: 20px;
-            font-weight: 300;
+            align-items: center;
+            overflow: hidden; /* Чтобы не появлялись полосы прокрутки */
         }
 
-        /* Настройки самого вьювера */
+        /* Контейнер-родитель. Он "держит" координаты для слоев */
+        .stage {
+            position: relative; /* Это ВАЖНО. Это точка отсчета */
+            width: 100%;
+            max-width: 1200px;
+            height: 80vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* СЛОЙ 1: Текст (На фоне) */
+        .background-text {
+            position: absolute; /* Абсолютное позиционирование */
+            z-index: 1;         /* Первый слой (снизу) */
+            
+            font-size: 15vw;    /* Огромный размер шрифта (зависит от ширины экрана) */
+            font-weight: 900;
+            line-height: 0.8;
+            text-align: center;
+            color: #2a2a2a;     /* Темно-серый, чтобы не спорить с моделью */
+            text-transform: uppercase;
+            pointer-events: none; /* Текст не мешает кликать мышкой */
+            user-select: none;    /* Текст нельзя выделить */
+        }
+
+        /* СЛОЙ 2: 3D Модель (Сверху) */
         model-viewer {
-            width: 90%;
-            height: 90vh; /* 70% от высоты экрана */
-            background-color: #000000;
-            border-radius: 10px;
+            position: absolute; /* Абсолютное позиционирование */
+            z-index: 2;         /* Второй слой (сверху) */
+            
+            width: 100%;        /* Размер вьювера */
+            height: 100%;
+            background-color: transparent; /* Прозрачный фон */
+            
+            /* Сдвигаем модель чуть ниже, если нужно */
+            /* top: 50px; */ 
+        }
+
+        /* Дополнительно: Кнопка (поверх всего) */
+        .overlay-ui {
+            position: absolute;
+            bottom: 50px;
+            z-index: 3; /* Самый верхний слой */
+        }
+        
+        .btn {
+            padding: 15px 40px;
+            background: white;
+            color: black;
+            text-decoration: none;
+            font-weight: bold;
+            border-radius: 30px;
         }
     </style>
-    
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
 </head>
 <body>
 
-    <h1>Мой 3D Проект</h1>
+    <div class="stage">
+        
+        <div class="background-text">
+            Super<br>Model
+        </div>
 
-    <model-viewer 
-        src="model.glb" 
-        alt="3D модель" 
-        auto-rotate 
-        camera-controls 
-        shadow-intensity="1"
-        ar>
-    </model-viewer>
+        <model-viewer 
+            src="model.glb" 
+            alt="3D" 
+            camera-controls 
+            auto-rotate 
+            shadow-intensity="1"
+            exposure="1">
+        </model-viewer>
+
+        <div class="overlay-ui">
+            <a href="#" class="btn">Подробнее</a>
+        </div>
+
+    </div>
 
 </body>
-
 </html>
-
