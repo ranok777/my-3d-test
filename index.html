@@ -97,8 +97,15 @@
         </div>
 
     </div>
-
+<script>
+    const modelViewer = document.querySelector("model-viewer");
+    // Ждем, пока модель загрузится, чтобы изменить скорость
+    modelViewer.addEventListener('load', () => {
+        modelViewer.timeScale = 2; 
+    });
+</script>
 </body>
 </html>
+
 
 
