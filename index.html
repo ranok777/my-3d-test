@@ -7,7 +7,17 @@
     <style>
         body {
             margin: 0;
-            background-color: #121212;
+            /* Базовый темный цвет */
+            background-color: #050505; 
+            
+            /* МАГИЯ: Рисуем пятна света прямо кодом */
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(60, 20, 120, 0.4) 0%, transparent 40%), /* Фиолетовое пятно слева сверху */
+                radial-gradient(circle at 90% 80%, rgba(0, 200, 150, 0.2) 0%, transparent 40%); /* Бирюзовое пятно справа снизу */
+            
+            /* Фиксируем фон, чтобы он не скроллился вместе с текстом */
+            background-attachment: fixed; 
+            
             color: white;
             font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
             height: 200vh; 
@@ -158,4 +168,5 @@
     </script>
 </body>
 </html>
+
 
