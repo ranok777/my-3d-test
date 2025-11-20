@@ -10,7 +10,6 @@
             background-color: #121212;
             color: white;
             font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-            /* Высота страницы = 2 экрана (200vh) для скроллинга */
             height: 200vh; 
             overflow-x: hidden;
         }
@@ -18,14 +17,13 @@
         /* --- FIXED 3D CONTAINER --- */
         #model-wrapper {
             position: fixed;
-            /* Якорь в центре объекта для точного позиционирования */
             transform: translate(-50%, -50%); 
             
-            /* Начальные координаты (Start Position) */
+            /* START POSITION (Изначально) */
             top: 50%;      
-            left: 75%;     /* Смещен вправо */
-            width: 40vw;   
-            height: 60vh;  
+            left: 75%;     
+            width: 50vw;   /* Было 40, стало 50 (шире) */
+            height: 80vh;  /* Было 60, стало 80 (выше) */
             
             z-index: 10;
             pointer-events: auto; 
@@ -40,29 +38,29 @@
 
         /* --- TEXT SECTIONS --- */
         .section {
-            height: 100vh; /* Высота одного экрана */
+            height: 100vh;
             position: relative;
             z-index: 5;
             display: flex;
             align-items: center;
             padding-left: 10%;
             box-sizing: border-box;
-            pointer-events: none; /* Пропускаем клики сквозь пустоту */
+            pointer-events: none;
         }
         
         .text-content {
             max-width: 450px;
-            pointer-events: auto; /* Текст можно выделять */
+            pointer-events: auto;
         }
 
         h1 { margin: 0 0 20px 0; font-size: 4rem; line-height: 0.95; font-weight: 800; letter-spacing: -2px; }
         p { font-size: 1.3rem; line-height: 1.6; color: #b0b0b0; margin: 0; }
         strong { color: white; font-weight: 600; }
 
-        /* Декоративный элемент (линия) */
         .divider { width: 50px; height: 4px; background: #ff0055; margin-bottom: 30px; }
 
     </style>
+    
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
 </head>
 <body>
@@ -74,7 +72,13 @@
             camera-controls 
             shadow-intensity="1" 
             exposure="1"
-            disable-zoom> </model-viewer>
+            disable-zoom
+            interaction-prompt="none" 
+            field-of-view="25deg"
+            min-field-of-view="10deg"
+            max-field-of-view="45deg">
+            
+            </model-viewer>
     </div>
 
     <section class="section">
@@ -105,52 +109,48 @@
         const viewer = document.querySelector('model-viewer');
         
         // --- COORDINATES CONFIG ---
-        const startLeft = 75; // Начало: 75% (Справа)
-        const endLeft = 50;   // Конец: 50% (Центр)
+        
+        // START: Правая позиция
+        const startLeft = 75; 
+        const startWidth = 50; // Увеличил контейнер
+        const startHeight = 80; // Увеличил контейнер
 
-        const startWidth = 40; // Начало: 40vw
-        const endWidth = 90;   // Конец: 90vw
+        // END: Центр
+        const endLeft = 50;   
+        const endWidth = 100;   // Максимум (во всю ширину)
+        const endHeight = 100;  // Максимум (во всю высоту)
 
-        const startHeight = 60; // Начало: 60vh
-        const endHeight = 85;   // Конец: 85vh
-
-        // --- 1. SCROLL SYNCHRONIZATION ---
+        // --- 1. SCROLL ---
         window.addEventListener('scroll', () => {
             const scrolled = window.scrollY;
             const maxScroll = window.innerHeight; 
             
-            // Вычисляем прогресс (0.0 ... 1.0)
             let progress = scrolled / maxScroll;
-            // Ограничиваем рамками от 0 до 1
             if (progress > 1) progress = 1;
             if (progress < 0) progress = 0;
 
-            // Линейная интерполяция (Lerp)
             const currentLeft = startLeft + (endLeft - startLeft) * progress;
             const currentWidth = startWidth + (endWidth - startWidth) * progress;
             const currentHeight = startHeight + (endHeight - startHeight) * progress;
 
-            // Применяем стили
             wrapper.style.left = currentLeft + '%';
             wrapper.style.width = currentWidth + 'vw';
             wrapper.style.height = currentHeight + 'vh';
         });
 
-        // --- 2. ANIMATION CONTROL (CLICK) ---
+        // --- 2. ANIMATION ---
         viewer.addEventListener('load', () => {
-            viewer.pause();      // Пауза при загрузке
+            viewer.pause();      
             viewer.currentTime = 0;
         });
 
         viewer.addEventListener('click', () => {
             if (viewer.paused) {
-                viewer.play(); // Запуск
+                viewer.play(); 
             } else {
-                viewer.pause(); // Пауза
+                viewer.pause(); 
             }
         });
-        
-        // Блок с Hover (вращение) удален полностью по твоему запросу.
     </script>
 </body>
 </html>
