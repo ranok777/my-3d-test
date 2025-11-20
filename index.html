@@ -192,4 +192,15 @@
 
             wrapper.style.left = currentLeft + '%';
             wrapper.style.top = currentTop + '%';
-            wrapper.style.
+            wrapper.style.width = currentWidth + 'vw';
+            wrapper.style.height = currentHeight + 'vh';
+        }
+
+        setResponsiveConfig();
+        window.addEventListener('scroll', updatePosition);
+        window.addEventListener('resize', () => { setResponsiveConfig(); updatePosition(); });
+        viewer.addEventListener('load', () => { viewer.pause(); viewer.currentTime = 0; });
+        viewer.addEventListener('click', () => { if (viewer.paused) viewer.play(); else viewer.pause(); });
+    </script>
+</body>
+</html>
