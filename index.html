@@ -3,47 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interactive 3D Experience</title>
+    <title>Responsive 3D Experience</title>
     <style>
         body {
             margin: 0;
-            /* Базовый темный цвет */
-            background-color: #050505; 
-            
-            /* МАГИЯ: Рисуем пятна света прямо кодом */
+            background-color: #050505;
+            /* НЕОНОВЫЙ ФОН */
             background-image: 
-                radial-gradient(circle at 10% 20%, rgba(60, 20, 120, 0.4) 0%, transparent 40%), /* Фиолетовое пятно слева сверху */
-                radial-gradient(circle at 90% 80%, rgba(0, 200, 150, 0.2) 0%, transparent 40%); /* Бирюзовое пятно справа снизу */
-            
-            /* Фиксируем фон, чтобы он не скроллился вместе с текстом */
-            background-attachment: fixed; 
-            
+                radial-gradient(circle at 10% 20%, rgba(60, 20, 120, 0.4) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(0, 200, 150, 0.2) 0%, transparent 40%);
+            background-attachment: fixed;
             color: white;
             font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
             height: 200vh; 
             overflow-x: hidden;
         }
+        
+        /* ШУМ (ЗЕРНИСТОСТЬ) */
+        body::after {
+            content: "";
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
+            pointer-events: none; z-index: 0; opacity: 0.07;
+        }
 
-        /* --- FIXED 3D CONTAINER --- */
+        /* --- 3D CONTAINER --- */
         #model-wrapper {
             position: fixed;
             transform: translate(-50%, -50%); 
-            
-            /* START POSITION (Изначально) */
             top: 50%;      
-            left: 75%;     
-            width: 50vw;   /* Было 40, стало 50 (шире) */
-            height: 80vh;  /* Было 60, стало 80 (выше) */
-            
             z-index: 10;
             pointer-events: auto; 
+            /* Начальные значения зададим через JS, так как они зависят от экрана */
         }
 
         model-viewer {
-            width: 100%;
-            height: 100%;
-            background-color: transparent;
-            outline: none;
+            width: 100%; height: 100%;
+            background-color: transparent; outline: none;
         }
 
         /* --- TEXT SECTIONS --- */
@@ -61,59 +57,79 @@
         .text-content {
             max-width: 450px;
             pointer-events: auto;
+            /* Тень под текстом, чтобы читался на любом фоне */
+            text-shadow: 0 2px 10px rgba(0,0,0,0.5); 
         }
 
         h1 { margin: 0 0 20px 0; font-size: 4rem; line-height: 0.95; font-weight: 800; letter-spacing: -2px; }
-        p { font-size: 1.3rem; line-height: 1.6; color: #b0b0b0; margin: 0; }
+        p { font-size: 1.3rem; line-height: 1.6; color: #e0e0e0; margin: 0; }
         strong { color: white; font-weight: 600; }
-
         .divider { width: 50px; height: 4px; background: #ff0055; margin-bottom: 30px; }
 
+        /* --- МОБИЛЬНАЯ АДАПТАЦИЯ (CSS) --- */
+        @media (max-width: 768px) {
+            /* Текст по центру */
+            .section {
+                padding-left: 0;
+                justify-content: center;
+                text-align: center;
+                padding: 20px;
+            }
+            
+            /* Шрифт поменьше */
+            h1 { font-size: 3rem; }
+            p { font-size: 1rem; }
+            
+            /* Линия по центру */
+            .divider { margin: 0 auto 20px auto; }
+            
+            /* Второй блок текста поднимаем чуть выше, чтобы влез */
+            .text-content {
+                background: rgba(0,0,0,0.6); /* Затемняем фон под текстом сильнее */
+                padding: 20px;
+                border-radius: 15px;
+            }
+        }
+
     </style>
-    
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
 </head>
 <body>
 
-   <div id="model-wrapper">
+    <div id="model-wrapper">
         <model-viewer 
             src="model.glb" 
             alt="3D Interactive Model" 
             camera-controls 
             shadow-intensity="1" 
             exposure="1"
-            
             disable-zoom 
             disable-tap 
-            
             interaction-prompt="none" 
             field-of-view="25deg"
             min-field-of-view="10deg"
             max-field-of-view="45deg">
-            
-            </model-viewer>
-    </div>
+        </model-viewer>
     </div>
 
     <section class="section">
         <div class="text-content">
             <div class="divider"></div>
-            <h1>INTERACTIVE<br>DEMO</h1>
+            <h1>MOBILE<br>READY</h1>
             <p>
-                Experience the model in real-time WebGL.<br><br>
-                1. <strong>CLICK</strong> the model to play the animation sequence.<br>
-                2. <strong>SCROLL DOWN</strong> to observe the details in high scale.
+                Now this page adapts to your device.<br><br>
+                1. <strong>CLICK</strong> to animate.<br>
+                2. <strong>SCROLL</strong> to zoom.
             </p>
         </div>
     </section>
 
     <section class="section">
-        <div class="text-content" style="margin-top: auto; margin-bottom: 15%; background: rgba(18, 18, 18, 0.9); padding: 30px; border-radius: 4px; border-left: 4px solid #ff0055;">
-            <h1>HIGH<br>PRECISION</h1>
+        <div class="text-content" style="margin-top: auto; margin-bottom: 15%;">
+            <h1>FULL<br>CONTROL</h1>
             <p>
-                The model seamlessly transitions to the center stage.<br>
-                This smooth scroll interaction allows you to showcase 
-                geometry and textures without losing context.
+                On mobile, the model stays centered but zooms in dynamically.
+                On desktop, it moves from right to center.
             </p>
         </div>
     </section>
@@ -122,23 +138,45 @@
         const wrapper = document.getElementById('model-wrapper');
         const viewer = document.querySelector('model-viewer');
         
-        // --- COORDINATES CONFIG ---
-        
-        // START: Правая позиция
-        const startLeft = 75; 
-        const startWidth = 50; // Увеличил контейнер
-        const startHeight = 80; // Увеличил контейнер
+        // Переменные для координат (объявляем через let, чтобы менять)
+        let startLeft, endLeft, startWidth, endWidth, startHeight, endHeight;
 
-        // END: Центр
-        const endLeft = 50;   
-        const endWidth = 100;   // Максимум (во всю ширину)
-        const endHeight = 100;  // Максимум (во всю высоту)
+        // ФУНКЦИЯ: Настройка координат в зависимости от экрана
+        function setResponsiveConfig() {
+            const isMobile = window.innerWidth < 768; // Проверка: это телефон?
 
-        // --- 1. SCROLL ---
-        window.addEventListener('scroll', () => {
+            if (isMobile) {
+                // --- НАСТРОЙКИ ДЛЯ ТЕЛЕФОНА ---
+                // Модель всегда по центру (50%), просто растет
+                startLeft = 50;   
+                endLeft = 50;     
+                
+                startWidth = 90;  // Широкая сразу
+                endWidth = 100;   
+                
+                startHeight = 50; // Половина экрана
+                endHeight = 100;  // Весь экран
+            } else {
+                // --- НАСТРОЙКИ ДЛЯ КОМПЬЮТЕРА ---
+                // Модель едет справа налево
+                startLeft = 75;   
+                endLeft = 50;     
+                
+                startWidth = 50;  
+                endWidth = 100;   
+                
+                startHeight = 80; 
+                endHeight = 100;  
+            }
+            
+            // Принудительно обновляем позицию один раз при загрузке/повороте экрана
+            updatePosition();
+        }
+
+        // Функция обновления позиции (та же математика)
+        function updatePosition() {
             const scrolled = window.scrollY;
             const maxScroll = window.innerHeight; 
-            
             let progress = scrolled / maxScroll;
             if (progress > 1) progress = 1;
             if (progress < 0) progress = 0;
@@ -150,23 +188,26 @@
             wrapper.style.left = currentLeft + '%';
             wrapper.style.width = currentWidth + 'vw';
             wrapper.style.height = currentHeight + 'vh';
+        }
+
+        // 1. Запускаем настройку при старте
+        setResponsiveConfig();
+
+        // 2. Слушаем скролл
+        window.addEventListener('scroll', updatePosition);
+
+        // 3. Слушаем поворот экрана или изменение размера окна
+        window.addEventListener('resize', () => {
+            setResponsiveConfig(); // Пересчитываем координаты
+            updatePosition();      // Применяем их
         });
 
-        // --- 2. ANIMATION ---
-        viewer.addEventListener('load', () => {
-            viewer.pause();      
-            viewer.currentTime = 0;
-        });
-
+        // --- ANIMATION LOGIC ---
+        viewer.addEventListener('load', () => { viewer.pause(); viewer.currentTime = 0; });
         viewer.addEventListener('click', () => {
-            if (viewer.paused) {
-                viewer.play(); 
-            } else {
-                viewer.pause(); 
-            }
+            if (viewer.paused) viewer.play(); 
+            else viewer.pause(); 
         });
     </script>
 </body>
 </html>
-
-
