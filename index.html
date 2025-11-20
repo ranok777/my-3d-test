@@ -1,33 +1,34 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smooth Sync Scroll</title>
+    <title>Interactive 3D Experience</title>
     <style>
         body {
             margin: 0;
             background-color: #121212;
             color: white;
-            font-family: 'Helvetica Neue', sans-serif;
-            /* Высота страницы = 2 экрана (200vh), чтобы было куда скроллить */
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            /* Высота страницы = 2 экрана (200vh) для скроллинга */
             height: 200vh; 
             overflow-x: hidden;
         }
 
-        /* Контейнер модели. ФИКСИРОВАННЫЙ. */
+        /* --- FIXED 3D CONTAINER --- */
         #model-wrapper {
             position: fixed;
-            /* Центрируем точку отсчета (anchor point) по центру объекта */
+            /* Якорь в центре объекта для точного позиционирования */
             transform: translate(-50%, -50%); 
-            /* Начальные значения (будут меняться скриптом) */
-            top: 50%;      /* Всегда по центру вертикали */
-            left: 75%;     /* Начало: Смещен вправо (75% ширины экрана) */
-            width: 40vw;   /* Начало: Ширина 40% экрана */
-            height: 60vh;  /* Начало: Высота 60% экрана */
+            
+            /* Начальные координаты (Start Position) */
+            top: 50%;      
+            left: 75%;     /* Смещен вправо */
+            width: 40vw;   
+            height: 60vh;  
             
             z-index: 10;
-            pointer-events: auto; /* Чтобы работали клики и ховер */
+            pointer-events: auto; 
         }
 
         model-viewer {
@@ -37,25 +38,29 @@
             outline: none;
         }
 
-        /* ТЕКСТОВЫЕ БЛОКИ */
+        /* --- TEXT SECTIONS --- */
         .section {
-            height: 100vh; /* Один экран */
+            height: 100vh; /* Высота одного экрана */
             position: relative;
             z-index: 5;
             display: flex;
             align-items: center;
             padding-left: 10%;
             box-sizing: border-box;
-            pointer-events: none; /* Чтобы текст пропускал клики сквозь пустые места */
+            pointer-events: none; /* Пропускаем клики сквозь пустоту */
         }
         
         .text-content {
-            max-width: 400px;
-            pointer-events: auto; /* Сам текст можно выделять */
+            max-width: 450px;
+            pointer-events: auto; /* Текст можно выделять */
         }
 
-        h1 { margin: 0; font-size: 4rem; line-height: 1; }
-        p { font-size: 1.2rem; color: #ccc; margin-top: 20px; }
+        h1 { margin: 0 0 20px 0; font-size: 4rem; line-height: 0.95; font-weight: 800; letter-spacing: -2px; }
+        p { font-size: 1.3rem; line-height: 1.6; color: #b0b0b0; margin: 0; }
+        strong { color: white; font-weight: 600; }
+
+        /* Декоративный элемент (линия) */
+        .divider { width: 50px; height: 4px; background: #ff0055; margin-bottom: 30px; }
 
     </style>
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
@@ -65,31 +70,33 @@
     <div id="model-wrapper">
         <model-viewer 
             src="model.glb" 
-            alt="3D Model" 
+            alt="3D Interactive Model" 
             camera-controls 
             shadow-intensity="1" 
             exposure="1"
-            auto-rotate-delay="0" 
-            rotation-per-second="30deg"
-            disable-zoom> 
-            </model-viewer>
+            disable-zoom> </model-viewer>
     </div>
 
     <section class="section">
         <div class="text-content">
-            <h1>START<br>HERE</h1>
+            <div class="divider"></div>
+            <h1>INTERACTIVE<br>DEMO</h1>
             <p>
-                1. Наведи мышку — модель вращается.<br>
-                2. Кликни — запустится анимация.<br>
-                3. Скролль вниз — плавное увеличение.
+                Experience the model in real-time WebGL.<br><br>
+                1. <strong>CLICK</strong> the model to play the animation sequence.<br>
+                2. <strong>SCROLL DOWN</strong> to observe the details in high scale.
             </p>
         </div>
     </section>
 
     <section class="section">
-        <div class="text-content" style="margin-top: auto; margin-bottom: 10%; background: rgba(0,0,0,0.8); padding: 20px; border-radius: 15px;">
-            <h1>BIG<br>SCALE</h1>
-            <p>Модель плавно приехала в центр и увеличилась, следуя за твоим скроллом.</p>
+        <div class="text-content" style="margin-top: auto; margin-bottom: 15%; background: rgba(18, 18, 18, 0.9); padding: 30px; border-radius: 4px; border-left: 4px solid #ff0055;">
+            <h1>HIGH<br>PRECISION</h1>
+            <p>
+                The model seamlessly transitions to the center stage.<br>
+                This smooth scroll interaction allows you to showcase 
+                geometry and textures without losing context.
+            </p>
         </div>
     </section>
 
@@ -97,66 +104,53 @@
         const wrapper = document.getElementById('model-wrapper');
         const viewer = document.querySelector('model-viewer');
         
-        // --- НАСТРОЙКИ КООРДИНАТ ---
-        // Start: Начальное положение (Справа)
-        const startLeft = 75; // 75% от левого края
-        const startWidth = 40; // 40vw ширина
-        const startHeight = 60; // 60vh высота
+        // --- COORDINATES CONFIG ---
+        const startLeft = 75; // Начало: 75% (Справа)
+        const endLeft = 50;   // Конец: 50% (Центр)
 
-        // End: Конечное положение (Центр)
-        const endLeft = 50;   // 50% (Центр)
-        const endWidth = 90;  // 90vw (Почти во всю ширину)
-        const endHeight = 85; // 85vh
+        const startWidth = 40; // Начало: 40vw
+        const endWidth = 90;   // Конец: 90vw
 
-        // --- 1. ЛОГИКА СКРОЛЛА (МАТЕМАТИКА) ---
+        const startHeight = 60; // Начало: 60vh
+        const endHeight = 85;   // Конец: 85vh
+
+        // --- 1. SCROLL SYNCHRONIZATION ---
         window.addEventListener('scroll', () => {
-            // Узнаем, сколько проскроллили (в пикселях)
             const scrolled = window.scrollY;
-            // Высота одного экрана (это наш путь от начала до конца анимации)
             const maxScroll = window.innerHeight; 
             
-            // Вычисляем прогресс от 0 до 1
-            // Math.min(..., 1) означает, что больше 1 прогресс не уйдет
+            // Вычисляем прогресс (0.0 ... 1.0)
             let progress = scrolled / maxScroll;
+            // Ограничиваем рамками от 0 до 1
             if (progress > 1) progress = 1;
             if (progress < 0) progress = 0;
 
-            // ИНТЕРПОЛЯЦИЯ (Линейный переход значений)
-            // Формула: Текущее = Начало + (Конец - Начало) * Прогресс
-            
+            // Линейная интерполяция (Lerp)
             const currentLeft = startLeft + (endLeft - startLeft) * progress;
             const currentWidth = startWidth + (endWidth - startWidth) * progress;
             const currentHeight = startHeight + (endHeight - startHeight) * progress;
 
-            // Применяем стили мгновенно
+            // Применяем стили
             wrapper.style.left = currentLeft + '%';
             wrapper.style.width = currentWidth + 'vw';
             wrapper.style.height = currentHeight + 'vh';
         });
 
-        // --- 2. ИСПРАВЛЕНИЕ ВРАЩЕНИЯ (HOVER) ---
-        viewer.addEventListener('mouseenter', () => {
-            viewer.autoRotate = true;
-        });
-        
-        viewer.addEventListener('mouseleave', () => {
-            viewer.autoRotate = false;
-        });
-
-        // --- 3. КЛИК И АНИМАЦИЯ ---
+        // --- 2. ANIMATION CONTROL (CLICK) ---
         viewer.addEventListener('load', () => {
-            viewer.pause();      // Гарантированно стоим на паузе при загрузке
+            viewer.pause();      // Пауза при загрузке
             viewer.currentTime = 0;
         });
 
         viewer.addEventListener('click', () => {
             if (viewer.paused) {
-                viewer.play();
+                viewer.play(); // Запуск
             } else {
-                viewer.pause();
+                viewer.pause(); // Пауза
             }
         });
-
+        
+        // Блок с Hover (вращение) удален полностью по твоему запросу.
     </script>
 </body>
 </html>
