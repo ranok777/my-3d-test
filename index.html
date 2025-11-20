@@ -65,20 +65,24 @@
 </head>
 <body>
 
-    <div id="model-wrapper">
+   <div id="model-wrapper">
         <model-viewer 
             src="model.glb" 
             alt="3D Interactive Model" 
             camera-controls 
             shadow-intensity="1" 
             exposure="1"
-            disable-zoom
+            
+            disable-zoom 
+            disable-tap 
+            
             interaction-prompt="none" 
             field-of-view="25deg"
             min-field-of-view="10deg"
             max-field-of-view="45deg">
             
             </model-viewer>
+    </div>
     </div>
 
     <section class="section">
@@ -154,3 +158,4 @@
     </script>
 </body>
 </html>
+
