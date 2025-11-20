@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Responsive 3D Experience</title>
+    <title>Mobile Layout Fix</title>
     <style>
         body {
             margin: 0;
@@ -19,10 +19,9 @@
             overflow-x: hidden;
         }
         
-        /* ШУМ (ЗЕРНИСТОСТЬ) */
+        /* ШУМ */
         body::after {
-            content: "";
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
             pointer-events: none; z-index: 0; opacity: 0.07;
         }
@@ -31,10 +30,9 @@
         #model-wrapper {
             position: fixed;
             transform: translate(-50%, -50%); 
-            top: 50%;      
             z-index: 10;
             pointer-events: auto; 
-            /* Начальные значения зададим через JS, так как они зависят от экрана */
+            /* top, left, width, height теперь управляются через JS */
         }
 
         model-viewer {
@@ -48,7 +46,7 @@
             position: relative;
             z-index: 5;
             display: flex;
-            align-items: center;
+            align-items: center; /* По умолчанию центр (для десктопа) */
             padding-left: 10%;
             box-sizing: border-box;
             pointer-events: none;
@@ -57,8 +55,7 @@
         .text-content {
             max-width: 450px;
             pointer-events: auto;
-            /* Тень под текстом, чтобы читался на любом фоне */
-            text-shadow: 0 2px 10px rgba(0,0,0,0.5); 
+            text-shadow: 0 2px 10px rgba(0,0,0,0.8); /* Тень посильнее для контраста */
         }
 
         h1 { margin: 0 0 20px 0; font-size: 4rem; line-height: 0.95; font-weight: 800; letter-spacing: -2px; }
@@ -68,29 +65,26 @@
 
         /* --- МОБИЛЬНАЯ АДАПТАЦИЯ (CSS) --- */
         @media (max-width: 768px) {
-            /* Текст по центру */
             .section {
                 padding-left: 0;
                 justify-content: center;
                 text-align: center;
                 padding: 20px;
+                
+                /* ВАЖНО: Прижимаем текст к низу экрана */
+                align-items: flex-end; 
+                padding-bottom: 15vh; /* Отступ от нижнего края */
             }
             
-            /* Шрифт поменьше */
             h1 { font-size: 3rem; }
-            p { font-size: 1rem; }
-            
-            /* Линия по центру */
+            p { font-size: 1.1rem; }
             .divider { margin: 0 auto 20px auto; }
             
-            /* Второй блок текста поднимаем чуть выше, чтобы влез */
+            /* Подложка под текст на мобилке (опционально, для читаемости) */
             .text-content {
-                background: rgba(0,0,0,0.6); /* Затемняем фон под текстом сильнее */
-                padding: 20px;
-                border-radius: 15px;
+                /* background: linear-gradient(to top, rgba(0,0,0,0.8), transparent); */
             }
         }
-
     </style>
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
 </head>
@@ -115,65 +109,63 @@
     <section class="section">
         <div class="text-content">
             <div class="divider"></div>
-            <h1>MOBILE<br>READY</h1>
+            <h1>MOBILE<br>OPTIMIZED</h1>
             <p>
-                Now this page adapts to your device.<br><br>
                 1. <strong>CLICK</strong> to animate.<br>
-                2. <strong>SCROLL</strong> to zoom.
+                2. <strong>SCROLL</strong> to zoom in.
             </p>
         </div>
     </section>
 
     <section class="section">
-        <div class="text-content" style="margin-top: auto; margin-bottom: 15%;">
-            <h1>FULL<br>CONTROL</h1>
-            <p>
-                On mobile, the model stays centered but zooms in dynamically.
-                On desktop, it moves from right to center.
-            </p>
-        </div>
-    </section>
+        </section>
 
     <script>
         const wrapper = document.getElementById('model-wrapper');
         const viewer = document.querySelector('model-viewer');
         
-        // Переменные для координат (объявляем через let, чтобы менять)
-        let startLeft, endLeft, startWidth, endWidth, startHeight, endHeight;
+        // Добавляем переменные для вертикали (startTop, endTop)
+        let startLeft, endLeft, startTop, endTop, startWidth, endWidth, startHeight, endHeight;
 
-        // ФУНКЦИЯ: Настройка координат в зависимости от экрана
         function setResponsiveConfig() {
-            const isMobile = window.innerWidth < 768; // Проверка: это телефон?
+            const isMobile = window.innerWidth < 768;
 
             if (isMobile) {
-                // --- НАСТРОЙКИ ДЛЯ ТЕЛЕФОНА ---
-                // Модель всегда по центру (50%), просто растет
-                startLeft = 50;   
-                endLeft = 50;     
+                // --- МОБИЛЬНЫЕ НАСТРОЙКИ ---
                 
-                startWidth = 90;  // Широкая сразу
+                // Позиция по вертикали (Top)
+                startTop = 30;    // Модель сверху (30% от верха экрана)
+                endTop = 50;      // Едет в центр (50%)
+                
+                // Позиция по горизонтали (Left)
+                startLeft = 50;   // Центр
+                endLeft = 50;     // Центр
+                
+                // Размеры
+                startWidth = 90;  
                 endWidth = 100;   
-                
-                startHeight = 50; // Половина экрана
-                endHeight = 100;  // Весь экран
+                startHeight = 50; // Занимает верхнюю половину
+                endHeight = 100;  
             } else {
-                // --- НАСТРОЙКИ ДЛЯ КОМПЬЮТЕРА ---
-                // Модель едет справа налево
+                // --- ДЕСКТОП НАСТРОЙКИ ---
+                
+                // Вертикаль всегда по центру
+                startTop = 50;
+                endTop = 50;
+                
+                // Горизонталь: Справа -> В центр
                 startLeft = 75;   
                 endLeft = 50;     
                 
+                // Размеры
                 startWidth = 50;  
                 endWidth = 100;   
-                
                 startHeight = 80; 
                 endHeight = 100;  
             }
-            
-            // Принудительно обновляем позицию один раз при загрузке/повороте экрана
             updatePosition();
         }
 
-        // Функция обновления позиции (та же математика)
         function updatePosition() {
             const scrolled = window.scrollY;
             const maxScroll = window.innerHeight; 
@@ -181,28 +173,25 @@
             if (progress > 1) progress = 1;
             if (progress < 0) progress = 0;
 
+            // Математика для всех параметров
             const currentLeft = startLeft + (endLeft - startLeft) * progress;
+            const currentTop = startTop + (endTop - startTop) * progress; // Новая строка для Top
             const currentWidth = startWidth + (endWidth - startWidth) * progress;
             const currentHeight = startHeight + (endHeight - startHeight) * progress;
 
             wrapper.style.left = currentLeft + '%';
+            wrapper.style.top = currentTop + '%'; // Применяем Top
             wrapper.style.width = currentWidth + 'vw';
             wrapper.style.height = currentHeight + 'vh';
         }
 
-        // 1. Запускаем настройку при старте
         setResponsiveConfig();
-
-        // 2. Слушаем скролл
         window.addEventListener('scroll', updatePosition);
-
-        // 3. Слушаем поворот экрана или изменение размера окна
         window.addEventListener('resize', () => {
-            setResponsiveConfig(); // Пересчитываем координаты
-            updatePosition();      // Применяем их
+            setResponsiveConfig(); 
+            updatePosition();      
         });
 
-        // --- ANIMATION LOGIC ---
         viewer.addEventListener('load', () => { viewer.pause(); viewer.currentTime = 0; });
         viewer.addEventListener('click', () => {
             if (viewer.paused) viewer.play(); 
