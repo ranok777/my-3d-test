@@ -3,23 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mobile Layout Fix</title>
+    <title>Cosmic 3D Experience</title>
     <style>
         body {
             margin: 0;
-            background-color: #050505;
-            /* НЕОНОВЫЙ ФОН */
+            background-color: #030305; /* Чуть темнее база */
+            /* НЕОНОВЫЙ ФОН (Оставляем как базу) */
             background-image: 
-                radial-gradient(circle at 10% 20%, rgba(60, 20, 120, 0.4) 0%, transparent 40%),
-                radial-gradient(circle at 90% 80%, rgba(0, 200, 150, 0.2) 0%, transparent 40%);
+                radial-gradient(circle at 10% 20%, rgba(50, 10, 110, 0.3) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(0, 180, 140, 0.2) 0%, transparent 40%);
             background-attachment: fixed;
             color: white;
             font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
             height: 200vh; 
             overflow-x: hidden;
+            /* Важно для позиционирования звезд */
+            position: relative; 
         }
+
+        /* ================= ЗВЕЗДЫ (CSS ТРЮК) ================= */
+        /* Контейнер для звезд позади всего */
+        .stars-wrapper {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: -1; overflow: hidden;
+        }
+
+        /* Анимация движения и мерцания */
+        @keyframes starMove {
+            from { transform: translateY(0px); opacity: 0.7; }
+            50%  { opacity: 1; } /* Пик яркости */
+            to   { transform: translateY(-2000px); opacity: 0.7; } /* Движение вверх */
+        }
+
+        /* Базовый стиль слоя звезд */
+        .layer { background: transparent; position: absolute; top: 0; left: 0; }
+
+        /* СЛОЙ 1: Маленькие звезды (Много) */
+        #stars1 {
+            width: 1px; height: 1px;
+            /* Генерация кучи теней (координаты x y color, x y color...) */
+            box-shadow: 124px 582px #FFF, 1823px 124px #FFF, 452px 1823px #FFF, 1452px 874px #FFF, 32px 982px #FFF, 1923px 42px #FFF, 834px 1623px #FFF, 1562px 723px #FFF, 234px 1234px #FFF, 1734px 345px #FFF, 982px 1834px #FFF, 123px 654px #FFF, 1678px 1902px #FFF, 567px 1432px #FFF, 1345px 234px #FFF, 890px 1123px #FFF, 1987px 765px #FFF, 345px 1678px #FFF, 1543px 987px #FFF, 678px 456px #FFF, 1123px 1345px #FFF, 1890px 234px #FFF, 432px 1789px #FFF, 1654px 678px #FFF, 765px 1543px #FFF, 1321px 890px #FFF, 213px 345px #FFF, 1876px 1234px #FFF, 543px 1654px #FFF, 1432px 765px #FFF, 98px 1876px #FFF, 1765px 432px #FFF, 876px 1321px #FFF, 1234px 543px #FFF, 165px 1765px #FFF, 1543px 213px #FFF, 654px 1432px #FFF, 189px 987px #FFF, 1432px 165px #FFF, 765px 1543px #FFF, 1321px 876px #FFF, 213px 432px #FFF, 1876px 1123px #FFF, 543px 1789px #FFF, 1432px 678px #FFF, 98px 1543px #FFF, 1765px 345px #FFF, 876px 1234px #FFF, 1234px 456px #FFF, 165px 1678px #FFF, 1543px 123px #FFF, 654px 1345px #FFF, 1024px 412px #FFF, 214px 1642px #FFF, 1753px 823px #FFF, 512px 234px #FFF, 1342px 1942px #FFF, 823px 562px #FFF, 1934px 1342px #FFF, 342px 923px #FFF, 1642px 1753px #FFF;
+            animation: starMove 150s linear infinite; /* Медленное движение */
+        }
+
+        /* СЛОЙ 2: Средние звезды */
+        #stars2 {
+            width: 2px; height: 2px;
+            box-shadow: 654px 123px rgba(255,255,255,0.8), 1432px 1765px rgba(255,255,255,0.8), 234px 876px rgba(255,255,255,0.8), 1876px 432px rgba(255,255,255,0.8), 98px 1543px rgba(255,255,255,0.8), 1654px 213px rgba(255,255,255,0.8), 765px 1321px rgba(255,255,255,0.8), 1234px 987px rgba(255,255,255,0.8), 432px 1890px rgba(255,255,255,0.8), 1789px 543px rgba(255,255,255,0.8), 1123px 1654px rgba(255,255,255,0.8), 345px 765px rgba(255,255,255,0.8), 1567px 1432px rgba(255,255,255,0.8), 890px 345px rgba(255,255,255,0.8), 1902px 1678px rgba(255,255,255,0.8), 567px 1123px rgba(255,255,255,0.8), 1345px 678px rgba(255,255,255,0.8), 123px 1789px rgba(255,255,255,0.8), 1834px 98px rgba(255,255,255,0.8), 678px 1543px rgba(255,255,255,0.8), 1456px 432px rgba(255,255,255,0.8), 234px 1876px rgba(255,255,255,0.8), 1765px 1234px rgba(255,255,255,0.8);
+            animation: starMove 250s linear infinite; /* Еще медленнее */
+        }
+
+        /* СЛОЙ 3: Крупные, редкие звезды */
+        #stars3 {
+            width: 3px; height: 3px;
+            box-shadow: 345px 1765px rgba(255,255,255,0.6), 1678px 345px rgba(255,255,255,0.6), 1234px 1890px rgba(255,255,255,0.6), 567px 765px rgba(255,255,255,0.6), 1890px 1345px rgba(255,255,255,0.6), 890px 1567px rgba(255,255,255,0.6), 1456px 234px rgba(255,255,255,0.6);
+            animation: starMove 400s linear infinite; /* Очень медленно */
+        }
+        /* ======================================================= */
+
         
-        /* ШУМ */
+        /* ШУМ (Оставляем поверх звезд для текстуры) */
         body::after {
             content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
@@ -32,7 +75,6 @@
             transform: translate(-50%, -50%); 
             z-index: 10;
             pointer-events: auto; 
-            /* top, left, width, height теперь управляются через JS */
         }
 
         model-viewer {
@@ -46,7 +88,7 @@
             position: relative;
             z-index: 5;
             display: flex;
-            align-items: center; /* По умолчанию центр (для десктопа) */
+            align-items: center; 
             padding-left: 10%;
             box-sizing: border-box;
             pointer-events: none;
@@ -55,7 +97,7 @@
         .text-content {
             max-width: 450px;
             pointer-events: auto;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.8); /* Тень посильнее для контраста */
+            text-shadow: 0 2px 10px rgba(0,0,0,0.8); 
         }
 
         h1 { margin: 0 0 20px 0; font-size: 4rem; line-height: 0.95; font-weight: 800; letter-spacing: -2px; }
@@ -66,29 +108,23 @@
         /* --- МОБИЛЬНАЯ АДАПТАЦИЯ (CSS) --- */
         @media (max-width: 768px) {
             .section {
-                padding-left: 0;
-                justify-content: center;
-                text-align: center;
-                padding: 20px;
-                
-                /* ВАЖНО: Прижимаем текст к низу экрана */
-                align-items: flex-end; 
-                padding-bottom: 15vh; /* Отступ от нижнего края */
+                padding-left: 0; justify-content: center; text-align: center; padding: 20px;
+                align-items: flex-end; padding-bottom: 15vh; 
             }
-            
             h1 { font-size: 3rem; }
             p { font-size: 1.1rem; }
             .divider { margin: 0 auto 20px auto; }
-            
-            /* Подложка под текст на мобилке (опционально, для читаемости) */
-            .text-content {
-                /* background: linear-gradient(to top, rgba(0,0,0,0.8), transparent); */
-            }
         }
     </style>
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
 </head>
 <body>
+
+    <div class="stars-wrapper">
+        <div id="stars1" class="layer"></div>
+        <div id="stars2" class="layer"></div>
+        <div id="stars3" class="layer"></div>
+    </div>
 
     <div id="model-wrapper">
         <model-viewer 
@@ -109,59 +145,35 @@
     <section class="section">
         <div class="text-content">
             <div class="divider"></div>
-            <h1>MOBILE<br>OPTIMIZED</h1>
+            <h1>COSMIC<br>EDITION</h1>
             <p>
                 1. <strong>CLICK</strong> to animate.<br>
-                2. <strong>SCROLL</strong> to zoom in.
+                2. <strong>SCROLL</strong> to journey deeper.
             </p>
         </div>
     </section>
 
-    <section class="section">
-        </section>
+    <section class="section"></section>
 
     <script>
         const wrapper = document.getElementById('model-wrapper');
         const viewer = document.querySelector('model-viewer');
-        
-        // Добавляем переменные для вертикали (startTop, endTop)
         let startLeft, endLeft, startTop, endTop, startWidth, endWidth, startHeight, endHeight;
 
         function setResponsiveConfig() {
             const isMobile = window.innerWidth < 768;
-
             if (isMobile) {
-                // --- МОБИЛЬНЫЕ НАСТРОЙКИ ---
-                
-                // Позиция по вертикали (Top)
-                startTop = 30;    // Модель сверху (30% от верха экрана)
-                endTop = 50;      // Едет в центр (50%)
-                
-                // Позиция по горизонтали (Left)
-                startLeft = 50;   // Центр
-                endLeft = 50;     // Центр
-                
-                // Размеры
-                startWidth = 90;  
-                endWidth = 100;   
-                startHeight = 50; // Занимает верхнюю половину
-                endHeight = 100;  
+                // Mobile
+                startTop = 30; endTop = 50;
+                startLeft = 50; endLeft = 50;
+                startWidth = 90; endWidth = 100;
+                startHeight = 50; endHeight = 100;
             } else {
-                // --- ДЕСКТОП НАСТРОЙКИ ---
-                
-                // Вертикаль всегда по центру
-                startTop = 50;
-                endTop = 50;
-                
-                // Горизонталь: Справа -> В центр
-                startLeft = 75;   
-                endLeft = 50;     
-                
-                // Размеры
-                startWidth = 50;  
-                endWidth = 100;   
-                startHeight = 80; 
-                endHeight = 100;  
+                // Desktop
+                startTop = 50; endTop = 50;
+                startLeft = 75; endLeft = 50;
+                startWidth = 50; endWidth = 100;
+                startHeight = 80; endHeight = 100;
             }
             updatePosition();
         }
@@ -173,30 +185,11 @@
             if (progress > 1) progress = 1;
             if (progress < 0) progress = 0;
 
-            // Математика для всех параметров
             const currentLeft = startLeft + (endLeft - startLeft) * progress;
-            const currentTop = startTop + (endTop - startTop) * progress; // Новая строка для Top
+            const currentTop = startTop + (endTop - startTop) * progress;
             const currentWidth = startWidth + (endWidth - startWidth) * progress;
             const currentHeight = startHeight + (endHeight - startHeight) * progress;
 
             wrapper.style.left = currentLeft + '%';
-            wrapper.style.top = currentTop + '%'; // Применяем Top
-            wrapper.style.width = currentWidth + 'vw';
-            wrapper.style.height = currentHeight + 'vh';
-        }
-
-        setResponsiveConfig();
-        window.addEventListener('scroll', updatePosition);
-        window.addEventListener('resize', () => {
-            setResponsiveConfig(); 
-            updatePosition();      
-        });
-
-        viewer.addEventListener('load', () => { viewer.pause(); viewer.currentTime = 0; });
-        viewer.addEventListener('click', () => {
-            if (viewer.paused) viewer.play(); 
-            else viewer.pause(); 
-        });
-    </script>
-</body>
-</html>
+            wrapper.style.top = currentTop + '%';
+            wrapper.style.
